@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Link from "next/link";
+import { SessionProvider } from "next-auth/react";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -24,10 +26,27 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <SessionProvider>
+          <header className="border-b">
+            <nav className="mx-auto max-w-6xl px-6 h-14 flex items-center gap-6">
+              <Link href="/" className="font-semibold">Seven Acres Estate</Link>
+              <div className="hidden md:flex items-center gap-4 text-sm text-zinc-700">
+                <Link href="/about">About</Link>
+                <Link href="/gallery">Gallery</Link>
+                <Link href="/pricing">Pricing</Link>
+                <Link href="/view">Schedule a Viewing</Link>
+                <Link href="/book" className="rounded bg-black text-white px-3 py-1">Book</Link>
+              </div>
+            </nav>
+          </header>
+          {children}
+          <footer className="border-t mt-12">
+            <div className="mx-auto max-w-6xl px-6 py-8 text-sm text-zinc-600">
+              © {new Date().getFullYear()} Seven Acres Estate
+            </div>
+          </footer>
+        </SessionProvider>
       </body>
     </html>
   );

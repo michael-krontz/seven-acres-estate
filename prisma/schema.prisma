@@ -1,0 +1,80 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Viewing {
+  id        String        @id @default(cuid())
+  date      DateTime
+  time      String
+  firstName String
+  lastName  String
+  email     String
+  phone     String
+  notes     String?
+  status    ViewingStatus @default(PENDING)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+}
+
+model Booking {
+  id               String        @id @default(cuid())
+  startDate        DateTime
+  endDate          DateTime
+  firstName        String
+  lastName         String
+  email            String
+  phone            String
+  eventType        String
+  guestCount       Int
+  specialRequests  String?
+
+  totalAmount      Int
+  depositAmount    Int
+  stripePaymentId  String?
+  depositPaid      Boolean       @default(false)
+  finalPaymentDue  DateTime
+  finalPaid        Boolean       @default(false)
+
+  contractSent     Boolean       @default(false)
+  contractSigned   Boolean       @default(false)
+  docusignId       String?
+
+  status           BookingStatus @default(PENDING)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+}
+
+model BlockedDate {
+  id        String   @id @default(cuid())
+  date      DateTime
+  reason    String
+  createdAt DateTime @default(now())
+}
+
+enum ViewingStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  DEPOSIT_PAID
+  CONTRACT_SIGNED
+  FINAL_PAID
+  COMPLETED
+  CANCELLED
+}
