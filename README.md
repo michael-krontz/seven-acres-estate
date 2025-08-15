@@ -2,19 +2,48 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
-
+### 1. Install dependencies
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Environment variables
+Edit `.env.local` (already created) if needed:
+
+Required for basic local dev (already filled with safe defaults):
+```
+DATABASE_URL=file:./dev.db
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=changeme
+ADMIN_EMAIL=admin@example.com
+ADMIN_PASSWORD=changeme
+```
+Optional (leave blank to disable integrations locally):
+```
+STRIPE_SECRET_KEY=
+STRIPE_PUBLISHABLE_KEY=
+STRIPE_WEBHOOK_SECRET=
+RESEND_API_KEY=
+```
+
+### 3. Initialize the database (SQLite)
+We use SQLite locally. Create/update the DB schema:
+```bash
+npx prisma db push
+```
+
+### 4. Start the development server
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+### 5. Admin login
+Visit `/admin` and use the credentials from `.env.local` (default: admin@example.com / changeme).
+
+### 6. Stripe / Email (optional)
+Add your Stripe keys & webhook secret then run a local webhook forwarder (e.g. `stripe listen --forward-to localhost:3000/api/stripe/webhook`). Add a Resend API key to enable real emails; otherwise messages log to the console.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 

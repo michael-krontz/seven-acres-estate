@@ -1,0 +1,9 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1600" height="900" fill="#F5F1EB"/>
+  <g opacity="0.6">
+    <circle cx="300" cy="400" r="220" fill="#E3E0D9" />
+    <circle cx="1300" cy="520" r="260" fill="#E3E0D9" />
+  </g>
+  <text x="50%" y="50%" text-anchor="middle" fill="#8FA68E" font-family="Georgia,serif" font-size="54">Seven Acres Estate</text>
+  <text x="50%" y="58%" text-anchor="middle" fill="#6b756d" font-family="Helvetica,Arial,sans-serif" font-size="22">Hero image placeholder</text>
+</svg>

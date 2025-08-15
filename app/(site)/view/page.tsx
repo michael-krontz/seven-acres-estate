@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { BookingCalendar } from "@/components/Calendar";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,6 +21,7 @@ type FormValues = z.infer<typeof schema>;
 export default function ViewPage() {
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const {
     register,
     handleSubmit,
@@ -37,7 +39,7 @@ export default function ViewPage() {
       });
       if (!res.ok) throw new Error("Failed to submit");
       setMessage("Thanks! We'll text you a confirmation shortly.");
-    } catch (e) {
+  } catch {
       setMessage("Something went wrong. Please try again.");
     } finally {
       setSubmitting(false);
@@ -45,11 +47,10 @@ export default function ViewPage() {
   };
 
   return (
-    <main className="mx-auto max-w-3xl px-6 py-12">
-      <h1 className="text-3xl font-semibold mb-2">Schedule Your Venue Viewing</h1>
-      <p className="mb-6 text-zinc-600">
-        Choose a date and a time slot. We offer 10 AM, 2 PM, and 4 PM viewings.
-      </p>
+    <main className="section pt-24 section-narrow max-w-3xl">
+      <span className="eyebrow">Private Site Visit</span>
+      <h1 className="mb-4">Schedule Your Venue Viewing</h1>
+      <p className="mb-10 muted max-w-2xl">Choose a preferred date and an available time. We currently host three guided viewings daily—each designed to give you generous space to explore and envision.</p>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -76,11 +77,19 @@ export default function ViewPage() {
             {errors.phone && <p className="text-sm text-red-600">Required</p>}
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm">Preferred Date</label>
-            <input className="mt-1 w-full rounded border px-3 py-2" type="date" {...register("date")} />
-            {errors.date && <p className="text-sm text-red-600">Required</p>}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="md:col-span-2">
+            <BookingCalendar
+              label="Select Date"
+              value={selectedDate}
+              onChange={(d) => {
+                setSelectedDate(d);
+                const iso = d.toISOString().split('T')[0];
+                (document.querySelector('input[name="date"]') as HTMLInputElement).value = iso;
+              }}
+            />
+            <input type="hidden" {...register("date")} />
+            {errors.date && <p className="text-sm text-red-600 mt-2">Required</p>}
           </div>
           <div>
             <label className="block text-sm">Time</label>
@@ -99,7 +108,7 @@ export default function ViewPage() {
           <label className="block text-sm">Special requests</label>
           <textarea className="mt-1 w-full rounded border px-3 py-2" rows={4} {...register("notes")} />
         </div>
-        <button disabled={submitting} className="rounded bg-black text-white px-4 py-2">
+        <button disabled={submitting} className="btn btn-primary">
           {submitting ? "Submitting..." : "Schedule Viewing"}
         </button>
         {message && <p className="text-sm text-zinc-700">{message}</p>}
